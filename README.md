@@ -1,6 +1,6 @@
-# Y.Org
+# YComp
 
-Testing, please dont try to use.
+DISCONTINUED.
 
 ## Screenshots
 

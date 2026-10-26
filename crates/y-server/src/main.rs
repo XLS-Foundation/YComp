@@ -314,12 +314,12 @@ impl App {
     }
 
     fn launch_terminal(&self) {
-        let mut cmd = std::process::Command::new("yorg-terminal");
+        let mut cmd = std::process::Command::new("ycomp-terminal");
         cmd.env("WAYLAND_DISPLAY", SOCKET_NAME);
 
         if let Ok(exe) = std::env::current_exe() {
             if let Some(dir) = exe.parent() {
-                let path = dir.join("yorg-terminal");
+                let path = dir.join("ycomp-terminal");
                 if path.exists() {
                     cmd = std::process::Command::new(path);
                     cmd.env("WAYLAND_DISPLAY", SOCKET_NAME);
@@ -328,8 +328,8 @@ impl App {
         }
 
         match cmd.spawn() {
-            Ok(_) => println!("Y.Org: launched terminal"),
-            Err(e) => println!("Y.Org: failed to launch terminal: {e}"),
+            Ok(_) => println!("YComp: launched terminal"),
+            Err(e) => println!("YComp: failed to launch terminal: {e}"),
         }
     }
 
@@ -467,7 +467,7 @@ impl App {
             ) {
                 self.grab = None;
             }
-            println!("Y.Org: Wayland toplevel closed, window {window_id} removed");
+            println!("YComp: Wayland toplevel closed, window {window_id} removed");
             self.focus_top();
             changed = true;
         }
@@ -488,7 +488,7 @@ impl App {
             self.wayland.set_focus(surface_id.clone());
             self.focused_window = Some(id);
             self.mapped.push((surface_id, id));
-            println!("Y.Org: new Wayland toplevel mapped as window {id}");
+            println!("YComp: new Wayland toplevel mapped as window {id}");
             changed = true;
         }
 
@@ -537,7 +537,7 @@ impl App {
                     }
                     self.stack.raise(window_id);
                     self.popup_windows.push((info.id.clone(), window_id));
-                    println!("Y.Org: new Wayland popup mapped as window {window_id}");
+                    println!("YComp: new Wayland popup mapped as window {window_id}");
                     changed = true;
                 }
             }
@@ -668,7 +668,7 @@ impl ApplicationHandler for App {
         }
 
         let window = event_loop
-            .create_window(Window::default_attributes().with_title("Y.Org"))
+            .create_window(Window::default_attributes().with_title("YComp"))
             .expect("failed to create window");
 
         let handle = window
@@ -692,7 +692,7 @@ impl ApplicationHandler for App {
             .expect("failed to create renderer");
 
         println!(
-            "Y.Org: renderer ready | GPU: {} | format {:?} | {}x{} | {} swapchain images",
+            "YComp: renderer ready | GPU: {} | format {:?} | {}x{} | {} swapchain images",
             renderer.gpu_name,
             renderer.format,
             renderer.extent.width,
@@ -719,7 +719,7 @@ impl ApplicationHandler for App {
     fn window_event(&mut self, event_loop: &ActiveEventLoop, _id: WindowId, event: WindowEvent) {
         match event {
             WindowEvent::CloseRequested => {
-                println!("Y.Org: shutting down...");
+                println!("YComp: shutting down...");
                 event_loop.exit();
             }
             WindowEvent::Resized(_) => {
@@ -1012,7 +1012,7 @@ impl ApplicationHandler for App {
 
 fn main() -> y_gpu::Result<()> {
     unsafe {
-        env::set_var("XDG_CURRENT_DESKTOP", "Y.Org");
+        env::set_var("XDG_CURRENT_DESKTOP", "YComp");
         env::set_var("XDG_SESSION_TYPE", "wayland");
     }
 
@@ -1023,7 +1023,7 @@ fn main() -> y_gpu::Result<()> {
     let gpu = GpuContext::new(display)?;
 
     let gpus = gpu.list_gpus()?;
-    println!("Y.Org: {} GPU(s) found", gpus.len());
+    println!("YComp: {} GPU(s) found", gpus.len());
     for (i, g) in gpus.iter().enumerate() {
         let (a, b, c) = g.vulkan_version;
         println!(
@@ -1033,7 +1033,7 @@ fn main() -> y_gpu::Result<()> {
     }
 
     let wayland = WaylandServer::new(SOCKET_NAME)?;
-    println!("Y.Org: Wayland socket ready, use WAYLAND_DISPLAY={SOCKET_NAME}");
+    println!("YComp: Wayland socket ready, use WAYLAND_DISPLAY={SOCKET_NAME}");
 
     let shell = Shell::from_env();
 

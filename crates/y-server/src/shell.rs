@@ -8,20 +8,17 @@ pub enum Shell {
 
 impl Shell {
     pub fn from_env() -> Self {
-        let mode = std::env::var("YORG_SHELL").unwrap_or_else(|_| "auto".to_string());
+        let mode = std::env::var("YCOMP_SHELL").unwrap_or_else(|_| "auto".to_string());
         match mode.as_str() {
             "none" | "off" | "0" => {
-                println!("Y.Org: shell disabled (YORG_SHELL={mode})");
+                println!("YComp: shell disabled (YCOMP_SHELL={mode})");
                 Shell::None
             }
             "minimal" => {
-                println!("Y.Org: minimal shell (y-desktop) enabled");
+                println!("YComp: minimal shell (y-desktop) enabled");
                 Shell::Minimal(Desktop::new())
             }
             _ => {
-                println!(
-                    "Y.Org: Ymir not available, falling back to y-desktop (YORG_SHELL={mode})"
-                );
                 Shell::Minimal(Desktop::new())
             }
         }
